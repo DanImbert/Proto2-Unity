@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
 	private float spawnPosZ = 20;
 	private float startDelay = 2;
 	private float spawnInterval = 1.5f;
+	
 
 	// Start is called before the first frame update
 	void Start()
@@ -16,11 +17,7 @@ public class SpawnManager : MonoBehaviour
 		InvokeRepeating("SpawnRandomAnimal", startDelay, spawnInterval);
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
+	
 
 	void SpawnRandomAnimal()
 	{
@@ -38,6 +35,24 @@ public class SpawnManager : MonoBehaviour
 		}
 
 		Vector3 spawnPos = new Vector3(Random.Range(-spawnRangeX, spawnRangeX), 0, spawnPosZ);
-		Instantiate(animalPrefabs[animalIndex], spawnPos, animalPrefabs[animalIndex].transform.rotation);
+		GameObject spawnedAnimal = Instantiate(animalPrefabs[animalIndex], spawnPos, animalPrefabs[animalIndex].transform.rotation);
+		spawnedAnimal.SetActive(true);
+
+
+		if (CheckStopCondition())
+		{
+			CancelInvoke("SpawnRandomAnimal");
+		}
 	}
+
+	
+	bool CheckStopCondition()
+	{
+		//Stop after spawning 10 animals
+		return (GameObject.FindGameObjectsWithTag("Animal").Length >= 10);
+	}
+
 }
+
+
+
